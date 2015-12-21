@@ -8,6 +8,7 @@
     function VarsController($scope,$http) {
       $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
         $scope.distance_treshold = response.data.distance_treshold;
+        $scope.level_up_code = response.data.level_up_code;
         $scope.Points = response.data.Points;
         $scope.Points.forEach(function(e){e.class = e.isActive?'success':'error';});
         $scope.sockets_length = response.data.sockets_length;
@@ -23,6 +24,8 @@
       <div class="form-inline">
         <label for="distance_treshold">distance_treshold</label>
         <input id="distance_treshold" type="text" ng-model="distance_treshold" class="input-mini" disabled/>
+        <label for="level_up_code">level_up_code</label>
+        <input id="level_up_code" type="text" ng-model="level_up_code" class="input-large" disabled/>
       </div>
       <div>
         <label for="sockets">Active connections: <span ng-bind="sockets_length"/></label>

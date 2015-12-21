@@ -29,68 +29,20 @@ var sockets = [];
 //радиус определения точки (м)
 var distance_treshold = 100;
 
+//код выдаваемый после снятия всех точек
+var level_up_code = '';
+
 var Points = [];
 
 initPoints();
 
 function initPoints() {
-  // Points = [{
-  //     name: 'Елка 1',
-  //     isActive: true,
-  //     ActivateCode: 'point1',
-  //     ConfirmCode: 'catch1',
-  //     Team: '',
-  //     Team_id: '',
-  //     coords: [60.002438, 30.200919]
-  //   }, //спар (начало)
-  //   {
-  //     name: 'Елка 2',
-  //     isActive: true,
-  //     ActivateCode: 'point2',
-  //     ConfirmCode: 'catch2',
-  //     Team: '',
-  //     Team_id: '',
-  //     coords: [60.010490, 30.211254]
-  //   }, //камышовая
-  //   {
-  //     name: 'Елка 3',
-  //     isActive: true,
-  //     ActivateCode: 'point3',
-  //     ConfirmCode: 'catch3',
-  //     Team: '',
-  //     Team_id: '',
-  //     coords: [60.006118, 30.216662]
-  //   }, //богатырский
-  //   {
-  //     name: 'Елка 4',
-  //     isActive: true,
-  //     ActivateCode: 'point4',
-  //     ConfirmCode: 'catch4',
-  //     Team: '',
-  //     Team_id: '',
-  //     coords: [60.000937, 30.234605]
-  //   }, //планерная
-  //   {
-  //     name: 'Елка 5',
-  //     isActive: true,
-  //     ActivateCode: 'point5',
-  //     ConfirmCode: 'catch5',
-  //     Team: '',
-  //     Team_id: '',
-  //     coords: [59.996899, 30.220310]
-  //   }, //яхтенная
-  //   {
-  //     name: 'Елка 6',
-  //     isActive: true,
-  //     ActivateCode: 'point6',
-  //     ConfirmCode: 'catch6',
-  //     Team: '',
-  //     Team_id: '',
-  //     coords: [59.997978, 30.201435]
-  //   }, //лыжный пер
-  // ];
   var file = fs.readFileSync(__dirname + '/data/trees.json', 'utf8');
   Points = JSON.parse(file);
+  
+  file = fs.readFileSync(__dirname + '/data/settings.json', 'utf8');
+  distance_treshold = JSON.parse(file).distance_treshold;
+  level_up_code = JSON.parse(file).level_up_code;
 }
 
 /* Array.shuffle( deep ) - перемешать элементы массива случайным образом
@@ -349,6 +301,10 @@ function broadcastPoints(_points, _sockets) {
   _sockets.forEach(function(_socket) {
     sendPoints(_points, _socket);
   });
+  
+  if (!checkActivePoints(_points)) {
+    broadcast('level_up', level_up_code);
+  }
 }
 
 function sendPoints(_points, _socket) {
@@ -373,6 +329,15 @@ function sendPoints(_points, _socket) {
   });
 
   _socket.emit('points', b);
+}
+
+function checkActivePoints(e) {
+  result = false;
+  e.forEach(function(el){
+    result = result || el.isActive;
+    if (result) {return result};
+  });
+  return result;
 }
 
 function updateRoster() {
@@ -448,35 +413,6 @@ router.get('/log-NOTforAplayers-JSON', function(req, res) {
 });
 
 router.get('/vars-NOTforAplayers-JSON', function(req, res) {
-  // function sock_to_txt(s___) {
-  //   r__ = [];
-  //   s___.forEach(function(d_) {
-  //     var d_coords;
-  //     if (d_.last_data) {
-  //       d_coords = JSON.parse(d_.last_data.text).coords;
-  //     }
-  //     r__.push([d_.store.data.name, d_.id, d_coords]);
-  //   });
-  //   return JSON.stringify(r__);
-  // }
-
-  // var body = 'Local vars:<br>\n' +
-  //   //'speed1                     : ' + speed1 + '<br>\n' +
-  //   //'speed2                     : ' + speed2 + '<br>\n' +
-  //   'distance_treshold          : ' + distance_treshold + '<br>\n' +
-  //   //'nextPointsOnMove           : ' + nextPointsOnMove + '<br>\n' +
-  //   //'nextPointsOnMove_interval  : ' + nextPointsOnMove_interval + '<br>\n' +
-  //   //'foxWaypoints               : '+JSON.stringify(foxWaypoints)+'<br>\n'+
-  //   //'foxWaypoints_next          : '+JSON.stringify(foxWaypoints_next)+'<br>\n'+
-  //   //'routeReqTimer                  : ' + routeReqTimer + '<br>\n' +
-  //   //'foxTimers                  : ' + JSON.stringify(foxTimers) + '<br>\n' +
-  //   //'foxTimerLimit              : ' + JSON.stringify(foxTimerLimit) + '<br>\n' +
-  //   //'sockets                    : '+JSON.stringify(sockets)+'<br>\n'+
-  //   //'Fox.timestamp              : ' + JSON.stringify(Fox.timestamp) + '<br>\n' +
-  //   //'Fox.coords                 : ' + JSON.stringify(Fox.coords) + '<br>\n' +
-  //   'Points                  : ' + JSON.stringify(Points) + '<br>\n' +
-  //   'sockets.length                 : ' + sockets.length + '<br>\n' +
-  //   'sockets                 : ' + sock_to_txt(sockets) + '<br>\n';
   function sock_to_txt(s___) {
     r__ = [];
     s___.forEach(function(d_) {
@@ -499,6 +435,7 @@ router.get('/vars-NOTforAplayers-JSON', function(req, res) {
   //res.setHeader('Content-Length', body.length);
   var body = {
     distance_treshold: distance_treshold,
+    level_up_code: level_up_code,
     Points: Points,
     sockets_length: sockets.length,
     sockets: sock_to_txt(sockets)

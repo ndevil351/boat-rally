@@ -168,7 +168,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 		m = myMap.geoObjects.get(i);
 		if (m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
 			m.geometry.setCoordinates(JSON.parse(msg_text).coords);
-			m.properties.set('iconContent', msg_name + ' ('+JSON.parse(msg_text).player_name+') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
+			m.properties.set('iconContent', msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
 			m.properties.set('balloonContentHeader', msg_name);
 			m.properties.set('balloonContent', JSON.parse(msg_text).description + '<br>Is on fox tail: ' + msg_FoxTimer + 'ms');
 			//			m.events.add('change', lookAtFox(m), this);
@@ -180,7 +180,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 			m = myGeoObjects.get(i);
 			if (m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
 				m.geometry.setCoordinates(JSON.parse(msg_text).coords);
-				m.properties.set('iconContent', msg_name + ' ('+JSON.parse(msg_text).player_name+') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
+				m.properties.set('iconContent', msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
 				m.properties.set('balloonContentHeader', msg_name);
 				m.properties.set('balloonContent', JSON.parse(msg_text).description + '<br>Is on fox tail: ' + msg_FoxTimer + 'ms');
 				//				m.events.add('change', lookAtFox(m), this);
@@ -192,7 +192,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 
 	if (!updated) {
 		player = new ymaps.Placemark(JSON.parse(msg_text).coords, {
-			iconContent: msg_name + ' ('+JSON.parse(msg_text).player_name+') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч',
+			iconContent: msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч',
 			balloonContentHeader: msg_name,
 			balloonContent: JSON.parse(msg_text).description + '<br>Is on fox tail: ' + msg_FoxTimer + 'ms',
 			isPlayer: true,
@@ -472,29 +472,29 @@ function updatePoint(point) {
 			openEmptyBalloon: true,
 			iconLayout: ymaps.templateLayoutFactory.createClass(
 				//'<div class="b-info-container"><div class="b-tree b-tree-$[properties.isActive]"></div><div class="b-info b-info-$[properties.isActive]">{{properties.treeID}}<br>{% if !properties.isActive %}Команда: {{properties.Team}}{% endif %}</div></div>'
-				'<div class="b-placemark-container">'+
-					'<div class="b-placemark">'+
-						'<div class="b-container">'+
-							'<div class="b-icon-container">'+
-								'<div class="b-icon b-icon-$[properties.isActive]">'+
-								'</div>'+
-							'</div>'+
-							'<div class="b-info-container">'+
-								'<div class="b-info b-info-$[properties.isActive]">'+
-									//'{{properties.treeID}}<br>'+
-										'{% if !properties.isActive %}'+
-											'{% if (properties.Team_id !== \'\') %}'+
-												'CP:{{properties.ActivateCode}}'+
-											'{% else %}'+
-												'Команда: {{properties.Team}}'+
-											'{% endif %}'+
-										'{% else %}'+
-											'{{properties.description}}'+
-										'{% endif %}'+
-								'</div>'+
-							'</div>'+
-						'</div>'+
-					'</div>'+
+				'<div class="b-placemark-container">' +
+				'<div class="b-placemark">' +
+				'<div class="b-container">' +
+				'<div class="b-icon-container">' +
+				'<div class="b-icon b-icon-$[properties.isActive]">' +
+				'</div>' +
+				'</div>' +
+				'<div class="b-info-container">' +
+				'<div class="b-info b-info-$[properties.isActive]">' +
+				//'{{properties.treeID}}<br>'+
+				'{% if !properties.isActive %}' +
+				'{% if (properties.Team_id !== \'\') %}' +
+				'CP:{{properties.ActivateCode}}' +
+				'{% else %}' +
+				'Команда: {{properties.Team}}' +
+				'{% endif %}' +
+				'{% else %}' +
+				'{{properties.description}}' +
+				'{% endif %}' +
+				'</div>' +
+				'</div>' +
+				'</div>' +
+				'</div>' +
 				'</div>'
 			)
 		});
@@ -504,12 +504,13 @@ function updatePoint(point) {
 		updated = true;
 	}
 
-	if (point.ConfirmCode !== '' && 
-		last_code && 
-		last_code !== '' && 
-		point.ConfirmCode.indexOf(last_code.toLowerCase()) >= 0) {
-			document.getElementsByName("LevelAction.Answer")[0].value = point.ActivateCode.toLowerCase();
-			document.getElementsByName("LevelAction.Answer")[0].parentElement.submit();
-		}
+	if (point.ConfirmCode !== '' &&
+		last_code &&
+		last_code !== '' &&
+		point.ConfirmCode.indexOf(last_code.toLowerCase()) >= 0 &&
+		document.getElementsByName("LevelAction.Answer").length > 0) {
+		document.getElementsByName("LevelAction.Answer")[0].value = point.ActivateCode.toLowerCase();
+		document.getElementsByName("LevelAction.Answer")[0].parentElement.submit();
+	}
 	//document.getElementById('debug-text').innerHTML = 'GeoObj: ' + myMap.geoObjects.getLength() + ' MyObj: ' + myGeoObjects.getLength() + ' Clients: ' + String(!client_names || client_names.length);
 }

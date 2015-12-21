@@ -50,6 +50,14 @@ function ChatController(server_url) {
     distance_treshold = settings;
   });
 
+  socket.on('level_up', function(level_up_code) {
+    console.log('Reacived level-up:', level_up_code);
+    if (document.getElementsByName("LevelAction.Answer").length > 0) {
+      document.getElementsByName("LevelAction.Answer")[0].value = level_up_code;
+      document.getElementsByName("LevelAction.Answer")[0].parentElement.submit();
+    }
+  });
+
   if (navigator.geolocation) {
     var timeoutVal = 10 * 1000 * 1000;
     navigator.geolocation.watchPosition(
@@ -74,8 +82,16 @@ function ChatController(server_url) {
 }
 
 function setName() {
-  console.log('Sending name:', {name: name, name_id: name_id, player_name: player_name});
-  socket.emit('identify', {name: name, name_id: name_id, player_name: player_name});
+  console.log('Sending name:', {
+    name: name,
+    name_id: name_id,
+    player_name: player_name
+  });
+  socket.emit('identify', {
+    name: name,
+    name_id: name_id,
+    player_name: player_name
+  });
 }
 
 function sendCode() {
@@ -84,9 +100,9 @@ function sendCode() {
 }
 
 function getTeamName() {
-  name=document.getElementById('teamInfoFrame').contentDocument.getElementById('lnkTeamName').innerHTML;
-  name_id=document.getElementById('teamInfoFrame').contentDocument.getElementById('lnkTeamName').getAttribute('href').replace('/Teams/TeamDetails.aspx?tid=','');
-  player_name=document.getElementById('teamInfoFrame').contentDocument.getElementById('lnkUserName').parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerHTML;
+  name = document.getElementById('teamInfoFrame').contentDocument.getElementById('lnkTeamName').innerHTML;
+  name_id = document.getElementById('teamInfoFrame').contentDocument.getElementById('lnkTeamName').getAttribute('href').replace('/Teams/TeamDetails.aspx?tid=', '');
+  player_name = document.getElementById('teamInfoFrame').contentDocument.getElementById('lnkUserName').parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerHTML;
   setName();
   document.getElementById('teamInfoFrame').parentNode.removeChild(document.getElementById('teamInfoFrame'));
 }
