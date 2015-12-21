@@ -39,7 +39,7 @@ initPoints();
 function initPoints() {
   var file = fs.readFileSync(__dirname + '/data/trees.json', 'utf8');
   Points = JSON.parse(file);
-  
+
   file = fs.readFileSync(__dirname + '/data/settings.json', 'utf8');
   distance_treshold = JSON.parse(file).distance_treshold;
   level_up_code = JSON.parse(file).level_up_code;
@@ -138,18 +138,6 @@ var cloneDeep = function(obj) {
   console.error("Unable to copy object! Its type isn't supported.", obj);
 }
 
-// function sendPoints(a) {
-//   b = [];
-//   a.forEach(function(elem) {
-//     c = cloneDeep(elem);
-//     c.ActivateCode = '';
-//     c.ConfirmCode = '';
-//     c.Team_id = '';
-//     b.push(c);
-//   })
-//   return b;
-// }
-
 io.on('connection', function(socket) {
 
   messages.forEach(function(data) {
@@ -157,9 +145,11 @@ io.on('connection', function(socket) {
   });
 
   socket.emit('distance_treshold', distance_treshold);
-  //socket.emit('points', sendPoints(Points));
   sendPoints(Points, socket);
   updateRoster();
+  if (!checkActivePoints(Points)) {
+    socket.emit('level_up', level_up_code);
+  }
 
   sockets.push(socket);
 
@@ -223,6 +213,9 @@ io.on('connection', function(socket) {
       socket.set('name_id', String(name.name_id || 'Anonymous'), function(err) {
         updateRoster();
         sendPoints(Points, socket);
+        if (!checkActivePoints(Points)) {
+          socket.emit('level_up', level_up_code);
+        }
       });
     });
   });
@@ -264,7 +257,6 @@ io.on('connection', function(socket) {
             coords: ((socket.last_data) ? JSON.parse(socket.last_data.text).coords : socket.last_data),
             socketID: socket.id
           });
-          //          if (msg && point.ConfirmCode.trim().toLowerCase() == msg.trim().toLowerCase()) {
           if (msg && point.ConfirmCode.indexOf(msg.trim().toLowerCase()) >= 0) {
             socket.get('name_id', function(err, name_id) {
               if (name_id !== 'Anonymous') {
@@ -285,14 +277,11 @@ io.on('connection', function(socket) {
                 });
               }
             });
-            //socket.emit('points', sendPoints(Points));
-            //broadcast('points', sendPoints(Points))
             broadcastPoints(Points, sockets);
           }
         }
       }
     });
-    //updateRoster();
   });
 
 });
@@ -301,7 +290,7 @@ function broadcastPoints(_points, _sockets) {
   _sockets.forEach(function(_socket) {
     sendPoints(_points, _socket);
   });
-  
+
   if (!checkActivePoints(_points)) {
     broadcast('level_up', level_up_code);
   }
@@ -333,9 +322,11 @@ function sendPoints(_points, _socket) {
 
 function checkActivePoints(e) {
   result = false;
-  e.forEach(function(el){
+  e.forEach(function(el) {
     result = result || el.isActive;
-    if (result) {return result};
+    if (result) {
+      return result
+    };
   });
   return result;
 }
@@ -344,7 +335,6 @@ function updateRoster() {
   async.map(
     sockets,
     function(socket, callback) {
-      //socket.get('name', callback);
       socket.get('name', function(err, name) {
         result = {};
         result.id = socket.id;
@@ -353,9 +343,6 @@ function updateRoster() {
         }
         if (!err) {
           result.name = name;
-          // socket.get('name_id', function(err, name_id) {
-          //   result.name.name_id = name_id;
-          // });
         }
         callback(err, result);
       });
@@ -383,16 +370,15 @@ server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() 
 
 router.get('/reset-NOTforAplayers', function(req, res) {
   initPoints();
-  //broadcast('points', sendPoints(Points));
   broadcastPoints(Points, sockets);
   var body = (
-    '<script>'+
-      'ts = new Date('+(new Date()).getTime()+');'+
-      'document.body = document.createElement(\'body\');'+
-      'document.body.innerHTML = (new Date(ts)).toLocaleDateString() + \' \' + '+
-                                '(new Date(ts)).toLocaleTimeString() + \'.\' + '+
-                                '(new Date(ts)).getMilliseconds() + '+
-                                '\' Reset - OK\''+
+    '<script>' +
+    'ts = new Date(' + (new Date()).getTime() + ');' +
+    'document.body = document.createElement(\'body\');' +
+    'document.body.innerHTML = (new Date(ts)).toLocaleDateString() + \' \' + ' +
+    '(new Date(ts)).toLocaleTimeString() + \'.\' + ' +
+    '(new Date(ts)).getMilliseconds() + ' +
+    '\' Reset - OK\'' +
     '</script>');
   res.setHeader('Content-Type', 'text/html');
   res.setHeader('Content-Length', body.length);
@@ -404,11 +390,12 @@ router.get('/log-NOTforAplayers-JSON', function(req, res) {
   log = file.split('\n');
   a = [];
   log.forEach(function(e) {
-    if (e !== '') {a.push(JSON.parse(e));}
+    if (e !== '') {
+      a.push(JSON.parse(e));
+    }
   });
   var body = JSON.stringify(a);
   res.setHeader('Content-Type', 'text/html');
-//  res.setHeader('Content-Length', body.length);
   res.end(body);
 });
 
@@ -423,7 +410,7 @@ router.get('/vars-NOTforAplayers-JSON', function(req, res) {
         name: ((d_.store && d_.store.data) ? d_.store.data.name : undefined),
         name_id: ((d_.store && d_.store.data) ? d_.store.data.name_id : undefined),
         player_name: ((d_.last_data) ? JSON.parse(d_.last_data.text).player_name : undefined),
-        id: d_.id, 
+        id: d_.id,
         coords: ((d_.last_data) ? JSON.parse(d_.last_data.text).coords : undefined)
       });
     });
@@ -432,7 +419,6 @@ router.get('/vars-NOTforAplayers-JSON', function(req, res) {
 
   res.setHeader('Content-Type', 'text/html');
   res.setHeader('Content-Charset', 'utf-8');
-  //res.setHeader('Content-Length', body.length);
   var body = {
     distance_treshold: distance_treshold,
     level_up_code: level_up_code,
@@ -440,6 +426,6 @@ router.get('/vars-NOTforAplayers-JSON', function(req, res) {
     sockets_length: sockets.length,
     sockets: sock_to_txt(sockets)
   };
-  
+
   res.end(JSON.stringify(body));
 });
