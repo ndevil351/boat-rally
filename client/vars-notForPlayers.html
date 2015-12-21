@@ -5,46 +5,73 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
   <script>
-    function LogController($scope,$http) {
-      $http.get("/log-NOTforAplayers-JSON").then(function(response) {
-        $scope.messages = response.data.reverse();
-        $scope.messages.forEach(function(e){
-          e.date = (new Date(e.ts)).toLocaleDateString() + ' ' + (new Date(e.ts)).toLocaleTimeString() + '.' + (new Date(e.ts)).getMilliseconds();
-        });
+    function VarsController($scope,$http) {
+      $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
+        $scope.distance_treshold = response.data.distance_treshold;
+        $scope.Points = response.data.Points;
+        $scope.Points.forEach(function(e){e.class = e.isActive?'success':'error';});
+        $scope.sockets_length = response.data.sockets_length;
+        $scope.sockets = response.data.sockets;
       });
     }
   </script>
 </head>
 
 <body>
-  <div class="container" ng-controller="LogController">
+  <div class="container" ng-controller="VarsController">
     <div class="row-fluid">
+      <div class="form-inline">
+        <label for="distance_treshold">distance_treshold</label>
+        <input id="distance_treshold" type="text" ng-model="distance_treshold" class="input-mini" disabled/>
+      </div>
       <div>
-        <table class="table table-striped table-bordered table-responsive">
+        <label for="sockets">Active connections: <span ng-bind="sockets_length"/></label>
+        <table id="sockets" class="table table-striped table-bordered table-responsive">
           <thead>
             <tr>
-              <th>date</th>
-              <th>team_name</th>
-              <th>team_id</th>
+              <th>name</th>
+              <th>name_id</th>
               <th>player_name</th>
-              <th>action</th>
-              <th>code</th>
-              <th>distance</td>
               <th>coords</th>
-              <th>socketID</th>
+              <th>id</th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="msg in messages">
-              <td ng-bind="msg.date"></td>
-              <td ng-bind="msg.team_name"></td>
-              <td ng-bind="msg.team_id"></td>
+            <tr ng-repeat="msg in sockets">
+              <td ng-bind="msg.name"></td>
+              <td ng-bind="msg.name_id"></td>
               <td ng-bind="msg.player_name"></td>
-              <td ng-bind="msg.action"></td>
-              <td ng-bind="msg.code"></td>
-              <td ng-bind="msg.distance"></td>
               <td ng-bind="msg.coords"></td>
-              <td ng-bind="msg.socketID"></td>
+              <td ng-bind="msg.id"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <label for="Points">Points:</label>
+        <table id="Points" class="table table-striped table-bordered table-responsive">
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>description</th>
+              <th>isActive</th>
+              <th>ActivateCode</th>
+              <th>ConfirmCode</th>
+              <th>Team</th>
+              <th>Team_id</td>
+              <th>coords</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="msg in Points" class="{{msg.class}}">
+              <td ng-bind="msg.name"></td>
+              <td ng-bind="msg.description"></td>
+              <td ng-bind="msg.isActive"></td>
+              <td ng-bind="msg.ActivateCode"></td>
+              <td ng-bind="msg.ConfirmCode"></td>
+              <td ng-bind="msg.Team"></td>
+              <td ng-bind="msg.Team_id"></td>
+              <td ng-bind="msg.coords"></td>
             </tr>
           </tbody>
         </table>
