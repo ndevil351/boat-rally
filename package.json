@@ -1,0 +1,13 @@
+{
+  "name": "anger-santa",
+  "version": "0.0.0",
+  "description": "GPS based part of reality quest game",
+  "main": "server.js",
+  "repository": "",
+  "author": "Kirill Yakuba <ndevil351@gmail.com>",
+  "dependencies": {
+    "async": "~0.2.8",
+    "express": "~3.2.4",
+    "socket.io": "~0.9.14"
+  }
+}

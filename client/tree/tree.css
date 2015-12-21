@@ -1,0 +1,78 @@
+.b-placemark-container {
+    display: inline-block;
+}
+.b-placemark {
+    /*display: inline-block;*/
+    margin-left:-50%;
+    margin-top:-72px;
+    /*border-style: solid;*/
+    /*border-width: 10px;*/
+    /*border-color: #66ff33;*/
+}
+.b-container {
+    display: inline-block;
+    max-width: 128px;
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #ff6633;*/
+}
+.b-icon-container {
+    /*display: inline-block;*/
+    max-width: 128px;
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #ff6633;*/
+}
+.b-icon { 
+    width: 72px; 
+    height: 72px; 
+    margin-left: calc(50% - 36px);
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #ff6633;*/
+}
+.b-icon.b-icon-false {
+    background: url(https://anger-santa-ndevil.c9users.io/tree/tree_clean.png) no-repeat 0 0;
+    background-size: 72px 72px;
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #ff6633;*/
+}
+.b-icon.b-icon-true {
+    background: url(https://anger-santa-ndevil.c9users.io/tree/tree.gif) no-repeat 0 0;
+    background-size: 72px 72px;
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #ff6633;*/
+}
+.b-info-container {
+    /*display: inline-block;*/
+    max-width: 128px;
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #ff6633;*/
+}
+.b-info { 
+    /*display: inline-block;*/
+    max-width: 128px;
+    word-wrap: break-word;
+    /*margin-left:-50%; */
+    margin-top:5px; 
+    padding: 3px;
+    text-align: center; 
+    font-weight: bold;
+    background-color: #ffffff; 
+    opacity: .7;
+    border-radius: 10px; 
+    border-style: solid;
+    border-width: 3px;
+    border-color: #ff6633;
+/*    -webkit-text-fill-color: transparent; /* переопределяет цвет текста с белого на прозрачный в браузерах на webkit */
+/*    -webkit-background-clip: text; */
+}
+.b-info.b-info-false {
+    border-color: #ff6633;
+}
+.b-info.b-info-true {
+    border-color: #66ff33;
+}
