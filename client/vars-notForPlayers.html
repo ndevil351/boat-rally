@@ -16,7 +16,7 @@
         $scope.sockets_length = response.data.sockets_length;
         $scope.sockets = response.data.sockets;
         $scope.sockets.forEach(function(e){
-          e.handshaken=JSON.stringify(e.handshaken);
+          e.handshaken=JSON.stringify(e.handshaken[e.id]);
         });
       });
     }
