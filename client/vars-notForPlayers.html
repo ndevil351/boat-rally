@@ -18,12 +18,13 @@
         $scope.sockets = response.data.sockets;
         $scope.sockets.forEach(function(e) {
           e.handshaken = e.handshaken[e.id];
-          e.handshaken_text =
-            "user-agent" + " : " + e.handshaken.headers["user-agent"] + '<br>' +
-            "referer" + " : " + e.handshaken.headers["referer"] + '<br>' +
-            "origin" + " : " + e.handshaken.headers["origin"] + '<br>' +
-            "x-forvarded-for" + " : " + e.handshaken.headers["x-forvarded-for"] + '<br>' +
-            "time" + " : " + e.handshaken["time"] + '<br>';
+          e.handshaken_text = [
+            "user-agent" + " : " + e.handshaken.headers["user-agent"],
+            "referer" + " : " + e.handshaken.headers["referer"],
+            "origin" + " : " + e.handshaken.headers["origin"],
+            "x-forvarded-for" + " : " + e.handshaken.headers["x-forvarded-for"],
+            "time" + " : " + e.handshaken["time"]
+          ];
         });
       });
     }
@@ -59,7 +60,7 @@
               <td ng-bind="msg.player_name"></td>
               <td ng-bind="msg.coords"></td>
               <td ng-bind="msg.id"></td>
-              <td ng-bind="msg.handshaken_text"></td>
+              <td><div ng-repeat="d in msg.handshaken_text" ng-bind="d"></div></td>
             </tr>
           </tbody>
         </table>
