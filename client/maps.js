@@ -170,7 +170,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 			m.geometry.setCoordinates(JSON.parse(msg_text).coords);
 			m.properties.set('iconContent', msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
 			m.properties.set('balloonContentHeader', msg_name);
-			m.properties.set('balloonContent', JSON.parse(msg_text).description + '<br>Is on fox tail: ' + msg_FoxTimer + 'ms');
+			m.properties.set('balloonContent', JSON.parse(msg_text).description);
 			//			m.events.add('change', lookAtFox(m), this);
 			updated = true;
 		}
@@ -182,7 +182,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 				m.geometry.setCoordinates(JSON.parse(msg_text).coords);
 				m.properties.set('iconContent', msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
 				m.properties.set('balloonContentHeader', msg_name);
-				m.properties.set('balloonContent', JSON.parse(msg_text).description + '<br>Is on fox tail: ' + msg_FoxTimer + 'ms');
+				m.properties.set('balloonContent', JSON.parse(msg_text).description);
 				//				m.events.add('change', lookAtFox(m), this);
 				updated = true;
 			}
@@ -194,7 +194,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 		player = new ymaps.Placemark(JSON.parse(msg_text).coords, {
 			iconContent: msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч',
 			balloonContentHeader: msg_name,
-			balloonContent: JSON.parse(msg_text).description + '<br>Is on fox tail: ' + msg_FoxTimer + 'ms',
+			balloonContent: JSON.parse(msg_text).description,
 			isPlayer: true,
 			isFox: false,
 			playerID: msg_name + '-' + JSON.parse(msg_text).session
