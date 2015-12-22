@@ -201,8 +201,8 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 		}, {
 			balloonPanelMaxMapArea: 0,
 			//draggable: false,
-			draggable: (JSON.parse(msg_text).session == socket.socket.sessionid), //заглушка для теста, потом убрать, иначе все пользователи смогут таскать свои меркеры
-			preset: "islands#blueStretchyIcon",
+			//draggable: (JSON.parse(msg_text).session == socket.socket.sessionid), //заглушка для теста, потом убрать, иначе все пользователи смогут таскать свои меркеры
+			draggable: (!JSON.parse(msg_text).player_name), //только если юзер не определен
 			openEmptyBalloon: true
 		});
 		player.events.add('geometrychange', function(e) {
