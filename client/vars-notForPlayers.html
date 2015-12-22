@@ -10,9 +10,14 @@
         $scope.distance_treshold = response.data.distance_treshold;
         $scope.level_up_code = response.data.level_up_code;
         $scope.Points = response.data.Points;
-        $scope.Points.forEach(function(e){e.class = e.isActive?'success':'error';});
+        $scope.Points.forEach(function(e){
+          e.class = e.isActive?'success':'error';
+        });
         $scope.sockets_length = response.data.sockets_length;
         $scope.sockets = response.data.sockets;
+        $scope.sockets.forEach(function(e){
+          e.handshaken=JSON.stringify(e.handshaken);
+        });
       });
     }
   </script>
@@ -37,6 +42,7 @@
               <th>player_name</th>
               <th>coords</th>
               <th>id</th>
+              <th>handshaken</th>
             </tr>
           </thead>
           <tbody>
@@ -46,6 +52,7 @@
               <td ng-bind="msg.player_name"></td>
               <td ng-bind="msg.coords"></td>
               <td ng-bind="msg.id"></td>
+              <td ng-bind="msg.handshaken"></td>
             </tr>
           </tbody>
         </table>

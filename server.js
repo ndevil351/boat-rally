@@ -411,7 +411,8 @@ router.get('/vars-NOTforAplayers-JSON', function(req, res) {
         name_id: ((d_.store && d_.store.data) ? d_.store.data.name_id : undefined),
         player_name: ((d_.last_data) ? JSON.parse(d_.last_data.text).player_name : undefined),
         id: d_.id,
-        coords: ((d_.last_data) ? JSON.parse(d_.last_data.text).coords : undefined)
+        coords: ((d_.last_data) ? JSON.parse(d_.last_data.text).coords : undefined),
+        handshaken: ((d_.manager && d_.manager.handshaken) ? d_.manager.handshaken : undefined)
       });
     });
     return r__;
