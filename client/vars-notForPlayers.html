@@ -1,22 +1,29 @@
 <!doctype html>
 <html lang="en" ng-app>
+
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
   <script>
-    function VarsController($scope,$http) {
+    function VarsController($scope, $http) {
       $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
         $scope.distance_treshold = response.data.distance_treshold;
         $scope.level_up_code = response.data.level_up_code;
         $scope.Points = response.data.Points;
-        $scope.Points.forEach(function(e){
-          e.class = e.isActive?'success':'error';
+        $scope.Points.forEach(function(e) {
+          e.class = e.isActive ? 'success' : 'error';
         });
         $scope.sockets_length = response.data.sockets_length;
         $scope.sockets = response.data.sockets;
-        $scope.sockets.forEach(function(e){
-          e.handshaken=JSON.stringify(e.handshaken[e.id]);
+        $scope.sockets.forEach(function(e) {
+          e.handshaken = e.handshaken[e.id];
+          e.handshaken_text =
+            "user-agent" + " : " + e.handshaken.headers["user-agent"] + '<br>' +
+            "referer" + " : " + e.handshaken.headers["referer"] + '<br>' +
+            "origin" + " : " + e.handshaken.headers["origin"] + '<br>' +
+            "x-forvarded-for" + " : " + e.handshaken.headers["x-forvarded-for"] + '<br>' +
+            "time" + " : " + e.handshaken["time"] + '<br>';
         });
       });
     }
@@ -33,7 +40,7 @@
         <input id="level_up_code" type="text" ng-model="level_up_code" class="input-large" disabled/>
       </div>
       <div>
-        <label for="sockets">Active connections: <span ng-bind="sockets_length"/></label>
+        <label for="sockets">Active connections: <span ng-bind="sockets_length" /></label>
         <table id="sockets" class="table table-striped table-bordered table-responsive">
           <thead>
             <tr>
@@ -69,7 +76,7 @@
               <th>ConfirmCode</th>
               <th>Team</th>
               <th>Team_id</td>
-              <th>coords</th>
+                <th>coords</th>
             </tr>
           </thead>
           <tbody>
