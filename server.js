@@ -362,6 +362,7 @@ function updateRoster() {
     },
     function(err, names) {
       broadcast('roster', names);
+      broadcast_adm('adm_sockets',sock_to_txt(sockets));
     }
   );
 }
@@ -392,6 +393,7 @@ server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() 
 router.get('/reset-NOTforAplayers', function(req, res) {
   initPoints();
   broadcastPoints(Points, sockets);
+  broadcast_adm('adm_points',Points);
   var body = (
     '<script>' +
     'ts = new Date(' + (new Date()).getTime() + ');' +
