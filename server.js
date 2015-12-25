@@ -152,6 +152,7 @@ io.on('connection', function(socket) {
   }
 
   sockets.push(socket);
+  broadcast_adm('adm_sockets', sock_to_txt(sockets));
 
   socket.on('disconnect', function() {
     name = socket.store.data.name;
@@ -160,6 +161,7 @@ io.on('connection', function(socket) {
     sockets.splice(sockets.indexOf(socket), 1);
 
     broadcast('removed', name + '-' + socketid);
+    broadcast_adm('adm_sockets', sock_to_txt(sockets));
 
     thelastOne = true;
     sockets.forEach(function(a) {
@@ -205,6 +207,8 @@ io.on('connection', function(socket) {
       socket.last_data = data;
 
       broadcast('coords', data);
+      broadcast_adm('adm_sockets', sock_to_txt(sockets));
+      
     });
   });
 
@@ -218,6 +222,14 @@ io.on('connection', function(socket) {
         }
       });
     });
+    broadcast_adm('adm_sockets', sock_to_txt(sockets));
+  });
+
+  socket.on('isAdmin', function(e) {
+    console.log('Its admin...');
+    if (e) {
+      socket.isAdmin = true;
+    }
   });
 
   socket.on('request_roaster', function() {
@@ -278,6 +290,7 @@ io.on('connection', function(socket) {
               }
             });
             broadcastPoints(Points, sockets);
+            broadcast_adm('adm_points', Points);
           }
         }
       }
@@ -359,6 +372,14 @@ function broadcast(event, data) {
   });
 }
 
+function broadcast_adm(event, data) {
+  sockets.forEach(function(socket) {
+    if (socket.isAdmin) {
+      socket.emit(event, data);
+    }
+  });
+}
+
 function log_event(event) {
   fs.appendFileSync(__dirname + '/data/events.log', JSON.stringify(event) + '\n');
 }
@@ -400,23 +421,6 @@ router.get('/log-NOTforAplayers-JSON', function(req, res) {
 });
 
 router.get('/vars-NOTforAplayers-JSON', function(req, res) {
-  function sock_to_txt(s___) {
-    r__ = [];
-    s___.forEach(function(d_) {
-      if (d_.last_data) {
-        d_coords = JSON.parse(d_.last_data.text).coords;
-      }
-      r__.push({
-        name: ((d_.store && d_.store.data) ? d_.store.data.name : undefined),
-        name_id: ((d_.store && d_.store.data) ? d_.store.data.name_id : undefined),
-        player_name: ((d_.last_data) ? JSON.parse(d_.last_data.text).player_name : undefined),
-        id: d_.id,
-        coords: ((d_.last_data) ? JSON.parse(d_.last_data.text).coords : undefined),
-        handshaken: ((d_.manager && d_.manager.handshaken) ? d_.manager.handshaken : undefined)
-      });
-    });
-    return r__;
-  }
 
   res.setHeader('Content-Type', 'text/html');
   res.setHeader('Content-Charset', 'utf-8');
@@ -430,3 +434,21 @@ router.get('/vars-NOTforAplayers-JSON', function(req, res) {
 
   res.end(JSON.stringify(body));
 });
+
+function sock_to_txt(s___) {
+  r__ = [];
+  s___.forEach(function(d_) {
+    if (d_.last_data) {
+      d_coords = JSON.parse(d_.last_data.text).coords;
+    }
+    r__.push({
+      name: ((d_.store && d_.store.data) ? d_.store.data.name : undefined),
+      name_id: ((d_.store && d_.store.data) ? d_.store.data.name_id : undefined),
+      player_name: ((d_.last_data) ? JSON.parse(d_.last_data.text).player_name : undefined),
+      id: d_.id,
+      coords: ((d_.last_data) ? JSON.parse(d_.last_data.text).coords : undefined),
+      handshaken: ((d_.manager && d_.manager.handshaken) ? d_.manager.handshaken : undefined)
+    });
+  });
+  return r__;
+}

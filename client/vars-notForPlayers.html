@@ -7,6 +7,39 @@
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
   <script>
     function VarsController($scope, $http) {
+      socket = io.connect();
+
+      socket.on('connect', function() {
+        console.log('Connected');
+        socket.emit('isAdmin', true);
+      });
+
+      socket.on('adm_sockets', function(sockets) {
+        console.log('adm_sockets');
+        $scope.sockets_length = sockets.length;
+        $scope.sockets = sockets;
+        $scope.sockets.forEach(function(e) {
+          e.handshaken = e.handshaken[e.id];
+          e.handshaken_text = [
+            "user-agent" + " : " + e.handshaken.headers["user-agent"],
+            "referer" + " : " + e.handshaken.headers["referer"],
+            "origin" + " : " + e.handshaken.headers["origin"],
+            "x-forwarded-for" + " : " + e.handshaken.headers["x-forwarded-for"],
+            "time" + " : " + e.handshaken["time"]
+          ];
+        });
+        $scope.$apply();
+      });
+      
+      socket.on('adm_points', function(points) {
+        console.log('adm_points');
+        $scope.Points = points;
+        $scope.Points.forEach(function(e) {
+          e.class = e.isActive ? 'success' : 'error';
+        });
+        $scope.$apply();
+      });
+      
       $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
         $scope.distance_treshold = response.data.distance_treshold;
         $scope.level_up_code = response.data.level_up_code;
@@ -60,7 +93,9 @@
               <td ng-bind="msg.player_name"></td>
               <td ng-bind="msg.coords"></td>
               <td ng-bind="msg.id"></td>
-              <td><div ng-repeat="d in msg.handshaken_text" ng-bind="d"></div></td>
+              <td>
+                <div ng-repeat="d in msg.handshaken_text" ng-bind="d"></div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -99,6 +134,7 @@
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/angular.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
 </body>
 
 </html>

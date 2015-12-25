@@ -484,7 +484,8 @@ function updatePoint(point) {
 				//'{{properties.treeID}}<br>'+
 				'{% if !properties.isActive %}' +
 				'{% if (properties.Team_id !== \'\') %}' +
-				'CP:{{properties.ActivateCode}}' +
+//				'CP:{{properties.ActivateCode}}' +
+				'уже снято вашей командой' +
 				'{% else %}' +
 				'Команда: {{properties.Team}}' +
 				'{% endif %}' +
