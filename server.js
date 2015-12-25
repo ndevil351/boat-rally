@@ -230,6 +230,8 @@ io.on('connection', function(socket) {
     if (e) {
       socket.isAdmin = true;
     }
+    
+    broadcast_adm('adm_sockets',sockets);
   });
 
   socket.on('request_roaster', function() {
