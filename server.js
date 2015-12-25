@@ -231,7 +231,7 @@ io.on('connection', function(socket) {
       socket.isAdmin = true;
     }
     
-    broadcast_adm('adm_sockets',sockets);
+    broadcast_adm('adm_sockets', sock_to_txt(sockets));
   });
 
   socket.on('request_roaster', function() {
