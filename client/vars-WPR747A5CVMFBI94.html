@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" ng-app>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+  <script>
+    function VarsController($scope, $http) {
+      socket = io.connect();
+
+      socket.on('connect', function() {
+        console.log('Connected');
+        socket.emit('isAdmin', true);
+      });
+
+      socket.on('adm_sockets', function(sockets) {
+        console.log('adm_sockets');
+        $scope.sockets_length = sockets.length;
+        $scope.sockets = sockets;
+        $scope.sockets.forEach(function(e) {
+          e.handshaken = e.handshaken[e.id];
+          e.handshaken_text = [
+            "user-agent" + " : " + e.handshaken.headers["user-agent"],
+            "referer" + " : " + e.handshaken.headers["referer"],
+            "origin" + " : " + e.handshaken.headers["origin"],
+            "x-forwarded-for" + " : " + e.handshaken.headers["x-forwarded-for"],
+            "time" + " : " + e.handshaken["time"]
+          ];
+        });
+        $scope.$apply();
+      });
+      
+      socket.on('adm_points', function(points) {
+        console.log('adm_points');
+        $scope.Points = points;
+        $scope.Points.forEach(function(e) {
+          e.class = e.isActive ? 'success' : 'error';
+        });
+        $scope.$apply();
+      });
+      
+      $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
+        $scope.distance_treshold = response.data.distance_treshold;
+        $scope.level_up_code = response.data.level_up_code;
+        $scope.Points = response.data.Points;
+        $scope.Points.forEach(function(e) {
+          e.class = e.isActive ? 'success' : 'error';
+        });
+        $scope.sockets_length = response.data.sockets_length;
+        $scope.sockets = response.data.sockets;
+        $scope.sockets.forEach(function(e) {
+          e.handshaken = e.handshaken[e.id];
+          e.handshaken_text = [
+            "user-agent" + " : " + e.handshaken.headers["user-agent"],
+            "referer" + " : " + e.handshaken.headers["referer"],
+            "origin" + " : " + e.handshaken.headers["origin"],
+            "x-forwarded-for" + " : " + e.handshaken.headers["x-forwarded-for"],
+            "time" + " : " + e.handshaken["time"]
+          ];
+        });
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container" ng-controller="VarsController">
+    <div class="row-fluid">
+      <div class="form-inline">
+        <label for="distance_treshold">distance_treshold</label>
+        <input id="distance_treshold" type="text" ng-model="distance_treshold" class="input-mini" disabled/>
+        <label for="level_up_code">level_up_code</label>
+        <input id="level_up_code" type="text" ng-model="level_up_code" class="input-large" disabled/>
+      </div>
+      <div>
+        <label for="sockets">Active connections: <span ng-bind="sockets_length" /></label>
+        <table id="sockets" class="table table-striped table-bordered table-responsive">
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>name_id</th>
+              <th>player_name</th>
+              <th>coords</th>
+              <th>id</th>
+              <!--<th>handshaken</th>-->
+              <th>user-agent</th>
+              <th>referer</th>
+              <th>origin</th>
+              <th>x-forwarded-for</th>
+              <th>time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="msg in sockets">
+              <td ng-bind="msg.name"></td>
+              <td ng-bind="msg.name_id"></td>
+              <td ng-bind="msg.player_name"></td>
+              <td ng-bind="msg.coords"></td>
+              <td ng-bind="msg.id"></td>
+              <!--<td>-->
+              <!--  <div ng-repeat="d in msg.handshaken_text" ng-bind="d"></div>-->
+              <!--</td>-->
+              <td ng-bind="msg.handshaken.headers['user-agent']"></td>
+              <td ng-bind="msg.handshaken.headers.referer"></td>
+              <td ng-bind="msg.handshaken.headers.origin"></td>
+              <td ng-bind="msg.handshaken.headers['x-forwarded-for']"></td>
+              <td ng-bind="msg.handshaken.time"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <label for="Points">Points:</label>
+        <table id="Points" class="table table-striped table-bordered table-responsive">
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>description</th>
+              <th>isActive</th>
+              <th>ActivateCode</th>
+              <th>ConfirmCode</th>
+              <th>Team</th>
+              <th>Team_id</td>
+                <th>coords</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="msg in Points" class="{{msg.class}}">
+              <td ng-bind="msg.name"></td>
+              <td ng-bind="msg.description"></td>
+              <td ng-bind="msg.isActive"></td>
+              <td ng-bind="msg.ActivateCode"></td>
+              <td ng-bind="msg.ConfirmCode"></td>
+              <td ng-bind="msg.Team"></td>
+              <td ng-bind="msg.Team_id"></td>
+              <td ng-bind="msg.coords"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/angular.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+</body>
+
+</html>
