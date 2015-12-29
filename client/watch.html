@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/tree/tree.css">
+</head>
+
+<body>
+  <div id="map" style="width: 100%; height: 300px; padding: 0; margin: 0;"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru-RU" type="text/javascript"></script>
+  <script type="text/javascript" src="maps.js"></script>
+  <script>
+    //var socket = io.connect();
+    socket = io.connect();
+
+    socket.on('connect', function() {
+      console.log('Connected');
+    });
+
+    socket.on('coords', function(msg) {
+      console.log('Recived coords:', msg);
+      if (msg.name && msg.name !== 'Anonymous') {
+        updatePlacemark(msg.name, msg.text, Boolean(msg.isFox), msg.isOnFox);
+        watchMarks();
+      }
+    });
+
+    socket.on('removedLastOne', function(name) {
+      console.log('Removed the last buddy:', name);
+      removePlacemark(name);
+    });
+
+    socket.on('removed', function(playerID) {
+      console.log('Removed:', playerID);
+      removePlacemark_one(playerID);
+    });
+
+    socket.on('roster', function(names) {
+      console.log('Reacived roster:', names);
+      client_names = [].concat(names);
+
+      client_names.forEach(function(e) {
+        if (e.name && e.name !== 'Anonymous') {
+          updatePlacemark(e.name, e.last_data);
+        }
+      });
+
+      checkPlacemarks(names);
+    });
+
+    // socket.on('points', function(points) {
+    //   console.log('Reacived points:', points);
+    //   updatePoints(points);
+    // });
+
+    socket.on('distance_treshold', function(settings) {
+      console.log('Reacived distance_treshold:', settings);
+      distance_treshold = settings;
+    });
+
+    document.getElementById("map").style.height = (window.innerHeight - 16) + 'px';
+  </script>
+</body>
+
+</html>
