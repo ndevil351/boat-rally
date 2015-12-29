@@ -113,11 +113,11 @@ function init_watch() {
 		},
 		options: {
 			selectOnClick: true,
-			maxWidth: 30,
-			position: {
-				top: 60,
-				left: 10
-			}
+			maxWidth: 30
+			// position: {
+			// 	top: 60,
+			// 	left: 10
+			// }
 		},
 		state: {
 			selected: true
