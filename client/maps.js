@@ -1,4 +1,4 @@
-var myMap, myGeoObjects, socket, Points, client_names, hold_center_btn, last_code, name, name_id, player_name;
+var myMap, myGeoObjects, socket, Points, client_names, hold_center_btn, last_code, name, name_id, player_name, isWatch;
 
 var distance_treshold = 20;
 
