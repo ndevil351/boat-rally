@@ -129,11 +129,11 @@ function init_watch() {
 		float: 'left'
 	});
 
-	myMap.events.add('actionbegin', function(e) {
-		if (hold_center_btn && hold_center_btn.state.get('selected')) {
-			hold_center_btn.state.set('selected', false);
-		}
-	});
+	// myMap.events.add('actionbegin', function(e) {
+	// 	if (hold_center_btn && hold_center_btn.state.get('selected')) {
+	// 		hold_center_btn.state.set('selected', false);
+	// 	}
+	// });
 
 	myMap.copyrights._clearLayout();
 	myMap.copyrights._clearPromo();
