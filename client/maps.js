@@ -88,7 +88,8 @@ function sendFakePosition(mark) {
 // Дождёмся загрузки API и готовности DOM.
 if (isWatch) {
 	ymaps.ready(init_watch);
-} else {
+}
+else {
 	ymaps.ready(init);
 }
 
@@ -109,15 +110,15 @@ function init_watch() {
 
 	hold_center_btn = new ymaps.control.Button({
 		data: {
-			image: 'tree/gps-01-16.png',
+			image: 'https://'+socket.socket.options.host+'/tree/gps-01-16.png',
 		},
 		options: {
 			selectOnClick: true,
 			maxWidth: 30
-			// position: {
-			// 	top: 60,
-			// 	left: 10
-			// }
+				// position: {
+				// 	top: 60,
+				// 	left: 10
+				// }
 		},
 		state: {
 			selected: true
@@ -126,6 +127,12 @@ function init_watch() {
 
 	myMap.controls.add(hold_center_btn, {
 		float: 'left'
+	});
+
+	myMap.events.add('actionbegin', function(e) {
+		if (hold_center_btn && hold_center_btn.state.get('selected')) {
+			hold_center_btn.state.set('selected', false);
+		}
 	});
 
 	myMap.copyrights._clearLayout();
@@ -178,7 +185,7 @@ function init() {
 
 	hold_center_btn = new ymaps.control.Button({
 		data: {
-			image: 'tree/gps-01-16.png',
+			image: 'https://'+socket.socket.options.host+'/tree/gps-01-16.png',
 		},
 		options: {
 			selectOnClick: true,
