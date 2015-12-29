@@ -54,6 +54,22 @@ function displayPosition(position) {
 	// 	});
 }
 
+function watchMarks() {
+	if (hold_center_btn && hold_center_btn.state.get('selected')) {
+		// myMap.setCenter(pos.coords, myMap.getZoom(), {
+		// 	checkZoomRange: true,
+		// 	duration: 1500
+		// });
+		myMap.setBounds(
+			myMap.geoObjects.getBounds(), {
+				checkZoomRange: true,
+				duration: 1500,
+				preciseZoom: true,
+				zoomMargin: 100
+			});
+	}
+}
+
 function sendFakePosition(mark) {
 	pos = {
 		coords: {
@@ -70,7 +86,53 @@ function sendFakePosition(mark) {
 }
 
 // Дождёмся загрузки API и готовности DOM.
-ymaps.ready(init);
+if (isWatch) {
+	ymaps.ready(init_watch);
+} else {
+	ymaps.ready(init);
+}
+
+function init_watch() {
+	// Создание экземпляра карты и его привязка к контейнеру с
+	// заданным id ("map").
+	myMap = new ymaps.Map('map', {
+		// При инициализации карты обязательно нужно указать
+		// её центр и коэффициент масштабирования.
+		center: [59.997954, 30.233932], // Спб
+		zoom: 15,
+		controls: ['zoomControl', 'typeSelector', 'trafficControl', 'fullscreenControl']
+	}, {
+		autoFitToViewport: 'always',
+		maxZoom: 15
+			//searchControlProvider: 'yandex#search'
+	});
+
+	hold_center_btn = new ymaps.control.Button({
+		data: {
+			image: 'tree/gps-01-16.png',
+		},
+		options: {
+			selectOnClick: true,
+			maxWidth: 30,
+			position: {
+				top: 60,
+				left: 10
+			}
+		},
+		state: {
+			selected: true
+		}
+	});
+
+	myMap.controls.add(hold_center_btn, {
+		float: 'left'
+	});
+
+	myMap.copyrights._clearLayout();
+	myMap.copyrights._clearPromo();
+
+	addFoxRoute();
+}
 
 function init() {
 	// Создание экземпляра карты и его привязка к контейнеру с
@@ -83,29 +145,16 @@ function init() {
 		controls: ['zoomControl', 'typeSelector', 'trafficControl', 'fullscreenControl']
 	}, {
 		autoFitToViewport: 'always'
-			//searchControlProvider: 'yandex#search'
 	});
 
 	// Макет кнопки должен отображать поле data.content
 	// и изменяться в зависимости от того, нажата кнопка или нет.
 	ButtonLayout = ymaps.templateLayoutFactory.createClass(
-			// '<div class="container" ng-controller="ChatController">'+
-			//'<form onsubmit="return sendCodeMap(this)">'+
-			//  '<div class="input-append span2">'+
-			//    '<input type="text" class="span1" id="code_on_map" placeholder="Введите ответ или код">'+
-			//    '<input type="submit" class="span1 btn btn-primary" value="Send">'+
-			//  '</div>'+
-			// '</form>'
-			//
-			//'<form onsubmit="return sendCodeMap(this)">'+
-			//    '<input type="text" class="form-control input-lg" id="code_on_map" placeholder="Введите ответ или код" style="max-width: 160px;">'+
-			// '</form>'
 			'<div class="row-fluid">' +
 			'<form onsubmit="return sendCodeMap(this)">' +
 			'<input type="text" class="span12" id="code_on_map" placeholder="Введите ответ или код">' +
 			'</form>' +
 			'</div>'
-			// '</div>'
 		),
 
 		button = new ymaps.control.Button({
@@ -129,7 +178,7 @@ function init() {
 
 	hold_center_btn = new ymaps.control.Button({
 		data: {
-			image: 'https://anger-santa-ndevil.c9users.io/tree/gps-01-16.png',
+			image: 'tree/gps-01-16.png',
 		},
 		options: {
 			selectOnClick: true,
@@ -168,7 +217,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 		m = myMap.geoObjects.get(i);
 		if (m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
 			m.geometry.setCoordinates(JSON.parse(msg_text).coords);
-			m.properties.set('iconContent', msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
+			m.properties.set('iconContent', msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
 			m.properties.set('balloonContentHeader', msg_name);
 			m.properties.set('balloonContent', JSON.parse(msg_text).description);
 			//			m.events.add('change', lookAtFox(m), this);
@@ -180,7 +229,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 			m = myGeoObjects.get(i);
 			if (m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
 				m.geometry.setCoordinates(JSON.parse(msg_text).coords);
-				m.properties.set('iconContent', msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
+				m.properties.set('iconContent', msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
 				m.properties.set('balloonContentHeader', msg_name);
 				m.properties.set('balloonContent', JSON.parse(msg_text).description);
 				//				m.events.add('change', lookAtFox(m), this);
@@ -192,7 +241,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 
 	if (!updated) {
 		player = new ymaps.Placemark(JSON.parse(msg_text).coords, {
-			iconContent: msg_name + ' (' + JSON.parse(msg_text).player_name + ') : ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч',
+			iconContent: msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч',
 			balloonContentHeader: msg_name,
 			balloonContent: JSON.parse(msg_text).description,
 			isPlayer: true,
@@ -200,6 +249,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 			playerID: msg_name + '-' + JSON.parse(msg_text).session
 		}, {
 			balloonPanelMaxMapArea: 0,
+			preset: "islands#blueStretchyIcon",
 			//draggable: false,
 			//draggable: (JSON.parse(msg_text).session == socket.socket.sessionid), //заглушка для теста, потом убрать, иначе все пользователи смогут таскать свои меркеры
 			draggable: (!JSON.parse(msg_text).player_name && JSON.parse(msg_text).session == socket.socket.sessionid), //только если юзер не определен и только свою сессию
@@ -234,7 +284,12 @@ function lookAtFox(playerMark) {
 			return;
 		}
 
-		tree = point.geoObject;
+		if (point) {
+			tree = point.geoObject;
+		}
+		else {
+			tree = undefined;
+		}
 
 		if (tree) {
 			distance = tree.getMap().options.get('projection').getCoordSystem().getDistance(playerMark.geometry.getCoordinates(), tree.geometry.getCoordinates());
@@ -419,8 +474,10 @@ function lookAtPlayers(foxMark) {
 function updatePoints(points) {
 	Points = [].concat(points);
 	Points.forEach(function(point) {
-		updatePoint(point);
-		lookAtPlayers(point.geoObject);
+		if (point) {
+			updatePoint(point);
+			lookAtPlayers(point.geoObject);
+		}
 	});
 }
 
@@ -484,7 +541,7 @@ function updatePoint(point) {
 				//'{{properties.treeID}}<br>'+
 				'{% if !properties.isActive %}' +
 				'{% if (properties.Team_id !== \'\') %}' +
-//				'CP:{{properties.ActivateCode}}' +
+				//				'CP:{{properties.ActivateCode}}' +
 				'уже снято вашей командой' +
 				'{% else %}' +
 				'Команда: {{properties.Team}}' +

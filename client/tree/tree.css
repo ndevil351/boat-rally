@@ -32,14 +32,14 @@
     /*border-color: #ff6633;*/
 }
 .b-icon.b-icon-false {
-    background: url(https://anger-santa-ndevil.c9users.io/tree/tree_clean.png) no-repeat 0 0;
+    background: url(tree_clean.png) no-repeat 0 0;
     background-size: 72px 72px;
     /*border-style: solid;*/
     /*border-width: 1px;*/
     /*border-color: #ff6633;*/
 }
 .b-icon.b-icon-true {
-    background: url(https://anger-santa-ndevil.c9users.io/tree/tree.gif) no-repeat 0 0;
+    background: url(tree.gif) no-repeat 0 0;
     background-size: 72px 72px;
     /*border-style: solid;*/
     /*border-width: 1px;*/

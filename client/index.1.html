@@ -85,7 +85,9 @@
         console.log('Sending code:', $scope.code);
         socket.emit('code', $scope.code);
       };
-
+      
+      document.getElementById("map").style.height = window.innerHeight + 'px';
+      
       if (navigator.geolocation) {
         var timeoutVal = 10 * 1000 * 1000;
         navigator.geolocation.watchPosition(
