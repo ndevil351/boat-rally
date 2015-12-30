@@ -87,7 +87,7 @@
                 "<br>Широта: " + position.geolocation.latitude +
                 "<br> Долгота: " + position.geolocation.longitude +
                 "<br> Точность: " + position.geolocation.accuracy +
-                "м<br> Скорость: " + position.geolocation.speed * 3.6 + " км/ч" +
+                "м<br> Скорость: " + Math.round(position.geolocation.speed * 3.6) + " км/ч" +
                 "<br> Обновлено: " + d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
                 
             document.getElementById("myCoords").innerHTML = text;
@@ -101,7 +101,7 @@
 
             placemark = myMap.geoObjects.get(0);
             placemark.geometry.setCoordinates([position.geolocation.latitude, position.geolocation.longitude]);
-            placemark.properties.set('iconContent', position.realname + " : " + position.geolocation.speed * 3.6 + " км/ч");
+            placemark.properties.set('iconContent', position.realname + " : " + Math.round(position.geolocation.speed * 3.6) + " км/ч");
 
             placemark.properties.set('balloonContent', text);
         }
