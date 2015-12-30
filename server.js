@@ -208,7 +208,7 @@ io.on('connection', function(socket) {
 
       broadcast('coords', data);
       broadcast_adm('adm_sockets', sock_to_txt(sockets));
-      
+
     });
   });
 
@@ -230,7 +230,7 @@ io.on('connection', function(socket) {
     if (e) {
       socket.isAdmin = true;
     }
-    
+
     broadcast_adm('adm_sockets', sock_to_txt(sockets));
   });
 
@@ -364,7 +364,7 @@ function updateRoster() {
     },
     function(err, names) {
       broadcast('roster', names);
-      broadcast_adm('adm_sockets',sock_to_txt(sockets));
+      broadcast_adm('adm_sockets', sock_to_txt(sockets));
     }
   );
 }
@@ -395,7 +395,7 @@ server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() 
 router.get('/reset-NOTforAplayers', function(req, res) {
   initPoints();
   broadcastPoints(Points, sockets);
-  broadcast_adm('adm_points',Points);
+  broadcast_adm('adm_points', Points);
   var body = (
     '<script>' +
     'ts = new Date(' + (new Date()).getTime() + ');' +
@@ -437,6 +437,34 @@ router.get('/vars-NOTforAplayers-JSON', function(req, res) {
   };
 
   res.end(JSON.stringify(body));
+});
+
+router.get('/hrumhrom', function(req, res) {
+  var options = {
+    host: 'hrumhrom.ru',
+    path: '/public/api/1/users/1697',
+    method: 'GET',
+    headers: {
+      'Authorization': 'Basic aHJ1bWhyb206NTE2X3hNS29Uem1JdTVoc2hZUHl6WEJhTGVHQmh0Q2NxY2xoUDdpaGlxNm5McG1QWW15eWpvMmhzbkZyZ3pEVEJZZmw='
+    }
+  };
+
+  callback = function(response) {
+    var str = '';
+
+    //another chunk of data has been recieved, so append it to `str`
+    response.on('data', function(chunk) {
+      str += chunk;
+    });
+
+    //the whole response has been recieved, so we just print it out here
+    response.on('end', function() {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.end(str);
+    });
+  }
+
+  http.request(options, callback).end();
 });
 
 function sock_to_txt(s___) {

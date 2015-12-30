@@ -1,0 +1,126 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body,
+        html {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        #myCoords {
+            display:none;
+        }
+    </style>
+    <script src="/js/jquery.min.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru-RU" type="text/javascript"></script>
+</head>
+<!--
+        Подключаем API карт
+	    Если вы используете API локально, то в URL ресурса необходимо указывать протокол в стандартном виде (http://...)
+    -->
+
+<body>
+    <p id="myCoords"></p>
+    <div id="map"></div>
+    <script>
+        var myMap, hold_center_btn;
+
+        // Дождёмся загрузки API и готовности DOM.
+        ymaps.ready(init);
+
+        function init() {
+            // Создание экземпляра карты и его привязка к контейнеру с
+            // заданным id ("map").
+            myMap = new ymaps.Map('map', {
+                // При инициализации карты обязательно нужно указать
+                // её центр и коэффициент масштабирования.
+                center: [59.997954, 30.233932], // Спб
+                zoom: 10,
+                controls: ['zoomControl', 'typeSelector', 'trafficControl', 'fullscreenControl']
+            }, {
+                autoFitToViewport: 'always',
+            });
+
+            myMap.geoObjects.add(new ymaps.Placemark([59.997954, 30.233932], {
+                iconContent: '999 км/ч'
+            }, {
+                // Запретим замену обычного балуна на балун-панель.
+                balloonPanelMaxMapArea: 0,
+                draggable: false,
+                preset: "islands#blueStretchyIcon",
+                // Заставляем балун открываться даже если в нем нет содержимого.
+                openEmptyBalloon: true
+            }));
+
+            hold_center_btn = new ymaps.control.Button({
+                data: {
+                    image: '/tree/gps-01-16.png',
+                },
+                options: {
+                    selectOnClick: true,
+                    maxWidth: 30
+                },
+                state: {
+                    selected: true
+                }
+            });
+
+            myMap.controls.add(hold_center_btn, {
+                float: 'left'
+            });
+
+            myMap.copyrights._clearLayout();
+            myMap.copyrights._clearPromo();
+        }
+
+        function displayPosition(position) {
+            d = new Date(0);
+            d.setSeconds(position.geolocation.timestamp);
+            text =
+                "<b>" + position.realname + "</b>" +
+                "<br>Широта: " + position.geolocation.latitude +
+                "<br> Долгота: " + position.geolocation.longitude +
+                "<br> Точность: " + position.geolocation.accuracy +
+                "м<br> Скорость: " + position.geolocation.speed * 3.6 + " км/ч" +
+                "<br> Обновлено: " + d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
+                
+            document.getElementById("myCoords").innerHTML = text;
+
+            if (hold_center_btn && hold_center_btn.state.get('selected')) {
+                myMap.setCenter([position.geolocation.latitude, position.geolocation.longitude], myMap.getZoom(), {
+                	checkZoomRange: true,
+                	duration: 1500
+                });
+            }
+
+            placemark = myMap.geoObjects.get(0);
+            placemark.geometry.setCoordinates([position.geolocation.latitude, position.geolocation.longitude]);
+            placemark.properties.set('iconContent', position.realname + " : " + position.geolocation.speed * 3.6 + " км/ч");
+
+            placemark.properties.set('balloonContent', text);
+        }
+
+        $(document).ready(function() {
+            setInterval(function() {
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: '/hrumhrom',
+                    dataType: 'json',
+                    success: function(res) {
+                        displayPosition(res);
+                    },
+                    error: function(xhr, err, code) {
+                        alert(code);
+                    }
+                });
+            }, 1000);
+        });
+    </script>
+</body>
