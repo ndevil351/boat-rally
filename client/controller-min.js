@@ -58,19 +58,19 @@ function ChatController(server_url) {
     }
   });
 
-  if (navigator.geolocation) {
-    var timeoutVal = 10 * 1000 * 1000;
-    navigator.geolocation.watchPosition(
-      displayPosition,
-      displayError, {
-        enableHighAccuracy: true,
-        timeout: timeoutVal,
-        maximumAge: 0
-      });
-  }
-  else {
-    alert("Geolocation не поддерживается данным браузером");
-  }
+  // if (navigator.geolocation) {
+  //   var timeoutVal = 10 * 1000 * 1000;
+  //   navigator.geolocation.watchPosition(
+  //     displayPosition,
+  //     displayError, {
+  //       enableHighAccuracy: true,
+  //       timeout: timeoutVal,
+  //       maximumAge: 0
+  //     });
+  // }
+  // else {
+  //   alert("Geolocation не поддерживается данным браузером");
+  // }
 
   function displayError(error) {
     var errors = {

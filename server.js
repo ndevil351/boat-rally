@@ -11,6 +11,9 @@ var async = require('async');
 var socketio = require('socket.io');
 var express = require('express');
 
+var dgram = require('dgram');
+var udp_server = dgram.createSocket('udp4');
+
 //
 // ## SimpleServer `SimpleServer(obj)`
 //
@@ -386,6 +389,32 @@ function broadcast_adm(event, data) {
 function log_event(event) {
   fs.appendFileSync(__dirname + '/data/events.log', JSON.stringify(event) + '\n');
 }
+
+udp_server.on('error', (err) => {
+  console.log(`server error:\n${err.stack}`);
+  udp_server.close();
+});
+
+udp_server.on('message', (msg, rinfo) => {
+  console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+  var point = JSON.parse('[' + String(msg).replace(' ', ',') + ']');
+  broadcast('coords', {
+    name: point[0],
+    text: {
+      coords: [point[2], point[3]],
+      description: 'Обновлено: '+ point[1],
+      session: '',
+      speed: point[4]
+    }
+  });
+});
+
+udp_server.on('listening', () => {
+  var address = udp_server.address();
+  console.log(`server listening ${address.address}:${address.port}`);
+});
+
+udp_server.bind(41234);
 
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {
   var addr = server.address();

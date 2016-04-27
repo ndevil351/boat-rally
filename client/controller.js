@@ -89,19 +89,19 @@ function ChatController($scope) {
     socket.emit('code', $scope.code);
   };
 
-  if (navigator.geolocation) {
-    var timeoutVal = 10 * 1000 * 1000;
-    navigator.geolocation.watchPosition(
-      displayPosition,
-      displayError, {
-        enableHighAccuracy: true,
-        timeout: timeoutVal,
-        maximumAge: 0
-      });
-  }
-  else {
-    alert("Geolocation не поддерживается данным браузером");
-  }
+  // if (navigator.geolocation) {
+  //   var timeoutVal = 10 * 1000 * 1000;
+  //   navigator.geolocation.watchPosition(
+  //     displayPosition,
+  //     displayError, {
+  //       enableHighAccuracy: true,
+  //       timeout: timeoutVal,
+  //       maximumAge: 0
+  //     });
+  // }
+  // else {
+  //   alert("Geolocation не поддерживается данным браузером");
+  // }
 
   // function displayPosition(position) {
   //   coordsText = "Широта: " + position.coords.latitude + "<br> Долгота: " + position.coords.longitude + "<br> Точность: " + position.coords.accuracy + "м<br> Скорость: " + position.coords.speed * 3.6 + " км/ч" + "<br> Обновлено: " + (new Date(position.timestamp)).toLocaleString() + "." + (new Date(position.timestamp)).getMilliseconds();
