@@ -208,13 +208,13 @@ function init() {
 			}
 		});
 
-	myMap.controls.add(button, {
-		float: 'left'
-			// position: {
-			// 	bottom: 0,
-			// 	left: 10
-			//}
-	});
+	// myMap.controls.add(button, {
+	// 	float: 'left'
+	// 		// position: {
+	// 		// 	bottom: 0,
+	// 		// 	left: 10
+	// 		//}
+	// });
 
 	hold_center_btn = new ymaps.control.Button({
 		data: {
@@ -233,9 +233,9 @@ function init() {
 		}
 	});
 
-	myMap.controls.add(hold_center_btn, {
-		float: 'left'
-	});
+	// myMap.controls.add(hold_center_btn, {
+	// 	float: 'left'
+	// });
 
 	myMap.copyrights._clearLayout();
 	myMap.copyrights._clearPromo();
