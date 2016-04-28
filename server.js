@@ -30,7 +30,7 @@ var messages = [];
 var sockets = [];
 
 //радиус определения точки (м)
-var distance_treshold = 100;
+var distance_treshold = 5;
 
 //код выдаваемый после снятия всех точек
 var level_up_code = '';

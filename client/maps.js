@@ -54,6 +54,39 @@ function displayPosition(position) {
 	// 	});
 }
 
+function displayBoat(position) {
+	coordsText = "Широта: " + position.coords.latitude +
+		"<br> Долгота: " + position.coords.longitude +
+		"<br> Точность: " + position.coords.accuracy +
+		"м<br> Скорость: " + position.coords.speed * 3.6 + " км/ч" +
+		"<br> Обновлено: " + (new Date(position.timestamp)).toLocaleString() + "." + (new Date(position.timestamp)).getMilliseconds() +
+		"<br> Session: " + socket.socket.sessionid;
+
+	pos = {
+		coords: [position.coords.latitude, position.coords.longitude],
+		description: coordsText,
+		session: socket.socket.sessionid,
+		player_name: 'Boat',
+		speed: position.coords.speed * 3.6
+	};
+	socket.emit('coords', JSON.stringify(pos));
+	console.log('Sent coords:', JSON.stringify(pos));
+
+	if (hold_center_btn && hold_center_btn.state.get('selected')) {
+		myMap.setCenter(pos.coords, myMap.getZoom(), {
+			checkZoomRange: true,
+			duration: 1500
+		});
+	}
+	// myMap.setBounds(
+	// 	myGeoObjects.getBounds(), {
+	// 		checkZoomRange: true,
+	// 		duration: 1500,
+	// 		preciseZoom: true,
+	// 		zoomMargin: 100
+	// 	});
+}
+
 function watchMarks() {
 	if (hold_center_btn && hold_center_btn.state.get('selected')) {
 		// myMap.setCenter(pos.coords, myMap.getZoom(), {
