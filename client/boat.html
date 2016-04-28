@@ -48,7 +48,7 @@
           "<br> Долгота: " + position.coords.longitude +
           "<br> Точность: " + position.coords.accuracy +
           "м<br> Скорость: " + position.coords.speed * 3.6 + " км/ч" +
-          "<br> Батарея телефона: " + (battery.level * 100)+"%" +
+          "<br> Батарея телефона: " + ((battery.level || 1) * 100)+"%" +
           "<br> Обновлено: " + (new Date(position.timestamp)).toLocaleString() + "." + (new Date(position.timestamp)).getMilliseconds() +
           "<br> Session: " + socket.socket.sessionid;
 
@@ -58,7 +58,7 @@
           session: socket.socket.sessionid,
           player_name: '',
           speed: position.coords.speed * 3.6,
-          battery: battery.level
+          battery: (battery.level || 1)
         };
         socket.emit('coords', JSON.stringify(pos));
         console.log('Sent coords:', JSON.stringify(pos));
@@ -69,7 +69,7 @@
         $scope.speed = position.coords.speed;
         $scope.timestamp = position.timestamp;
         $scope.localtime = (new Date(position.timestamp)).toLocaleString() + "." + (new Date(position.timestamp)).getMilliseconds();
-        $scope.battery = (battery.level * 100)+"%";
+        $scope.battery = ((battery.level || 1) * 100)+"%";
         $scope.$apply();
 
       }
