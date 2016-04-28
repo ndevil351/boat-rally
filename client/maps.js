@@ -182,7 +182,7 @@ function init() {
 		// её центр и коэффициент масштабирования.
 		center: [59.997954, 30.233932], // Спб
 		zoom: 19,
-		controls: ['zoomControl', 'typeSelector', 'trafficControl', 'fullscreenControl'],
+		controls: ['zoomControl', 'typeSelector', 'fullscreenControl'],
 		type: 'yandex#hybrid'
 	}, {
 		autoFitToViewport: 'always'
@@ -225,7 +225,7 @@ function init() {
 			selectOnClick: true,
 			maxWidth: 30,
 			position: {
-				top: 60,
+				top: 10,
 				left: 10
 			}
 		},
@@ -234,9 +234,9 @@ function init() {
 		}
 	});
 
-	// myMap.controls.add(hold_center_btn, {
-	// 	float: 'left'
-	// });
+	myMap.controls.add(hold_center_btn, {
+		float: 'left'
+	});
 
 	myMap.copyrights._clearLayout();
 	myMap.copyrights._clearPromo();
@@ -284,8 +284,8 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 
 	if (!updated && msg_text) {
 		player = new ymaps.Placemark(JSON.parse(msg_text).coords, {
-			iconContent: msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч',
-			balloonContentHeader: msg_name,
+			iconContent: (name || msg_name) + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч',
+			balloonContentHeader: (name || msg_name),
 			balloonContent: JSON.parse(msg_text).description,
 			isPlayer: true,
 			isFox: false,
@@ -583,12 +583,12 @@ function updatePoint(point) {
 				'<div class="b-info b-info-$[properties.isActive]">' +
 				//'{{properties.treeID}}<br>'+
 				'{% if !properties.isActive %}' +
-				'{% if (properties.Team_id !== \'\') %}' +
-				//				'CP:{{properties.ActivateCode}}' +
-				'уже снято вашей командой' +
-				'{% else %}' +
-				'Команда: {{properties.Team}}' +
-				'{% endif %}' +
+				//'{% if (properties.Team_id !== \'\') %}' +
+								'CP:{{properties.ActivateCode}}' +
+				// 'уже снято вашей командой' +
+				// '{% else %}' +
+				// 'Команда: {{properties.Team}}' +
+				// '{% endif %}' +
 				'{% else %}' +
 				'{{properties.description}}' +
 				'{% endif %}' +
