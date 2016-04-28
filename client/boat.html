@@ -51,7 +51,7 @@
           coords: [position.coords.latitude, position.coords.longitude],
           description: coordsText,
           session: socket.socket.sessionid,
-          player_name: player_name,
+          player_name: '',
           speed: position.coords.speed * 3.6
         };
         socket.emit('coords', JSON.stringify(pos));
