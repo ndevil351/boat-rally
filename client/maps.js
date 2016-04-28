@@ -328,10 +328,10 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 }
 
 function lookAtFox(playerMark) {
-	updated = false;
+	p_updated = false;
 
 	Points.forEach(function(point) {
-		if (updated) {
+		if (p_updated) {
 			return;
 		}
 
@@ -352,13 +352,13 @@ function lookAtFox(playerMark) {
 				
 				playerMark.options.set('preset', "islands#redStretchyIcon");
 
-				updated = false;
+				p_updated = false;
 				myMap.geoObjects.each(function(m) {
 					if (m.geometry &&
 						m.geometry.getType() == 'Circle' &&
 						m.properties.get('playerID') == playerMark.properties.get('playerID')) {
 						m.geometry.setCoordinates(playerMark.geometry.getCoordinates());
-						updated = true;
+						p_updated = true;
 					}
 				}, this);
 				myGeoObjects.each(function(m) {
@@ -366,11 +366,11 @@ function lookAtFox(playerMark) {
 						m.geometry.getType() == 'Circle' &&
 						m.properties.get('playerID') == playerMark.properties.get('playerID')) {
 						m.geometry.setCoordinates(playerMark.geometry.getCoordinates());
-						updated = true;
+						p_updated = true;
 					}
 				}, this);
 
-				if (!updated) {
+				if (!p_updated) {
 					circleMark = new ymaps.Circle(
 						[playerMark.geometry.getCoordinates(),
 							distance_treshold
@@ -403,12 +403,12 @@ function lookAtFox(playerMark) {
 
 					if (circleMark.properties.get('playerID').search(socket.socket.sessionid) >= 0) {
 						myGeoObjects.add(circleMark);
-						updated = true;
+						p_updated = true;
 					}
 					else {
 						//рисовать или нет не свои отметки о поимке лисы
 						tree.getMap().geoObjects.add(circleMark);
-						updated = true;
+						p_updated = true;
 					}
 				}
 			}
