@@ -143,7 +143,7 @@ function init_watch() {
 
 	hold_center_btn = new ymaps.control.Button({
 		data: {
-			image: 'https://'+socket.socket.options.host+'/tree/gps-01-16.png',
+			image: 'https://' + socket.socket.options.host + '/tree/gps-01-16.png',
 		},
 		options: {
 			selectOnClick: true,
@@ -219,7 +219,7 @@ function init() {
 
 	hold_center_btn = new ymaps.control.Button({
 		data: {
-			image: 'https://'+socket.socket.options.host+'/tree/gps-01-16.png',
+			image: 'https://' + socket.socket.options.host + '/tree/gps-01-16.png',
 		},
 		options: {
 			selectOnClick: true,
@@ -253,6 +253,14 @@ function sendCodeMap(e) {
 }
 
 function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
+	if (msg_text && msg_name == 'Boat' && hold_center_btn && hold_center_btn.state.get('selected')) {
+		myMap.setCenter(JSON.parse(msg_text).coords, myMap.getZoom(), {
+			checkZoomRange: true,
+			duration: 1500
+		});
+	}
+
+
 	updated = false;
 	for (i = 0; i < myMap.geoObjects.getLength(); i++) {
 		m = myMap.geoObjects.get(i);
@@ -584,7 +592,7 @@ function updatePoint(point) {
 				//'{{properties.treeID}}<br>'+
 				'{% if !properties.isActive %}' +
 				//'{% if (properties.Team_id !== \'\') %}' +
-								'CP:{{properties.ActivateCode}}' +
+				'CP:{{properties.ActivateCode}}' +
 				// 'уже снято вашей командой' +
 				// '{% else %}' +
 				// 'Команда: {{properties.Team}}' +
