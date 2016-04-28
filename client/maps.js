@@ -267,8 +267,8 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 		if (msg_text &&
 			m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
 			m.geometry.setCoordinates(JSON.parse(msg_text).coords);
-			m.properties.set('iconContent', msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
-			m.properties.set('balloonContentHeader', msg_name);
+			m.properties.set('iconContent', (name || msg_name) + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
+			m.properties.set('balloonContentHeader', (name || msg_name));
 			m.properties.set('balloonContent', JSON.parse(msg_text).description);
 			//			m.events.add('change', lookAtFox(m), this);
 			updated = true;
@@ -280,8 +280,8 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 			if (msg_text &&
 				m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
 				m.geometry.setCoordinates(JSON.parse(msg_text).coords);
-				m.properties.set('iconContent', msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
-				m.properties.set('balloonContentHeader', msg_name);
+				m.properties.set('iconContent', (name || msg_name) + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
+				m.properties.set('balloonContentHeader', (name || msg_name));
 				m.properties.set('balloonContent', JSON.parse(msg_text).description);
 				//				m.events.add('change', lookAtFox(m), this);
 				updated = true;
