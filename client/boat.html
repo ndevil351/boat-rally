@@ -1,4 +1,5 @@
-<!doctype html><html lang="en" ng-app>
+<!doctype html>
+<html lang="en" ng-app>
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,10 +41,14 @@
       }
 
       function displayPosition(position) {
+        //Поскольку с браузерами пока зоопарк..
+        var battery = navigator.battery || navigator.webkitBattery || navigator.mozBattery;
+        
         coordsText = "Широта: " + position.coords.latitude +
           "<br> Долгота: " + position.coords.longitude +
           "<br> Точность: " + position.coords.accuracy +
           "м<br> Скорость: " + position.coords.speed * 3.6 + " км/ч" +
+          "<br> Батарея телефона: " + (battery.level * 100)+"%" +
           "<br> Обновлено: " + (new Date(position.timestamp)).toLocaleString() + "." + (new Date(position.timestamp)).getMilliseconds() +
           "<br> Session: " + socket.socket.sessionid;
 
@@ -52,17 +57,19 @@
           description: coordsText,
           session: socket.socket.sessionid,
           player_name: '',
-          speed: position.coords.speed * 3.6
+          speed: position.coords.speed * 3.6,
+          battery: battery.level
         };
         socket.emit('coords', JSON.stringify(pos));
         console.log('Sent coords:', JSON.stringify(pos));
-        
+
         $scope.lat = position.coords.latitude;
         $scope.lon = position.coords.longitude;
         $scope.accuracy = position.coords.accuracy;
         $scope.speed = position.coords.speed;
         $scope.timestamp = position.timestamp;
         $scope.localtime = (new Date(position.timestamp)).toLocaleString() + "." + (new Date(position.timestamp)).getMilliseconds();
+        $scope.battery = (battery.level * 100)+"%";
         $scope.$apply();
 
       }
@@ -98,6 +105,8 @@
         <label for="timestamp">timestamp</label>
         <input id="timestamp" type="text" ng-model="timestamp" class="input-large" disabled/>
         <input id="timestamp" type="text" ng-model="localtime" class="input-large" disabled/>
+        <label for="battery">батарея</label>
+        <input id="battery" type="text" ng-model="battery" class="input-large" disabled/>
       </div>
     </div>
   </div>
