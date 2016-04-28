@@ -345,7 +345,11 @@ function lookAtFox(playerMark) {
 		if (tree) {
 			distance = tree.getMap().options.get('projection').getCoordSystem().getDistance(playerMark.geometry.getCoordinates(), tree.geometry.getCoordinates());
 
-			if (distance < distance_treshold && point.isActive) {
+			// if (distance < distance_treshold && point.isActive) {
+			if (distance < distance_treshold) {
+				point.isActive = false;
+				updatePoint(point);
+				
 				playerMark.options.set('preset', "islands#redStretchyIcon");
 
 				updated = false;
@@ -409,6 +413,9 @@ function lookAtFox(playerMark) {
 				}
 			}
 			else {
+				point.isActive = true;
+				updatePoint(point);
+
 				playerMark.options.set('preset', "islands#blueStretchyIcon");
 				tree.getMap().geoObjects.each(function(m) {
 					if (m.geometry &&
