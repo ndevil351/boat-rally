@@ -181,8 +181,9 @@ function init() {
 		// При инициализации карты обязательно нужно указать
 		// её центр и коэффициент масштабирования.
 		center: [59.997954, 30.233932], // Спб
-		zoom: 15,
-		controls: ['zoomControl', 'typeSelector', 'trafficControl', 'fullscreenControl']
+		zoom: 19,
+		controls: ['zoomControl', 'typeSelector', 'trafficControl', 'fullscreenControl'],
+		type: 'yandex#hybrid'
 	}, {
 		autoFitToViewport: 'always'
 	});
@@ -255,7 +256,8 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 	updated = false;
 	for (i = 0; i < myMap.geoObjects.getLength(); i++) {
 		m = myMap.geoObjects.get(i);
-		if (m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
+		if (msg_text &&
+			m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
 			m.geometry.setCoordinates(JSON.parse(msg_text).coords);
 			m.properties.set('iconContent', msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
 			m.properties.set('balloonContentHeader', msg_name);
@@ -267,7 +269,8 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 	if (!updated) {
 		for (i = 0; i < myGeoObjects.getLength(); i++) {
 			m = myGeoObjects.get(i);
-			if (m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
+			if (msg_text &&
+				m.properties.get('playerID') == msg_name + '-' + JSON.parse(msg_text).session) {
 				m.geometry.setCoordinates(JSON.parse(msg_text).coords);
 				m.properties.set('iconContent', msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч');
 				m.properties.set('balloonContentHeader', msg_name);
@@ -279,7 +282,7 @@ function updatePlacemark(msg_name, msg_text, msg_isFox, msg_FoxTimer) {
 		}
 	}
 
-	if (!updated) {
+	if (!updated && msg_text) {
 		player = new ymaps.Placemark(JSON.parse(msg_text).coords, {
 			iconContent: msg_name + ((JSON.parse(msg_text).player_name) ? ' (' + JSON.parse(msg_text).player_name + ') ' : ' ') + ': ' + Math.round(JSON.parse(msg_text).speed) + 'км/ч',
 			balloonContentHeader: msg_name,
