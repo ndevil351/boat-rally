@@ -43,6 +43,15 @@
       $scope.update_point = function update_point() {
         alert(this.msg.name);
         alert(this.$parent.sockets);
+        this.$parent.sockets.forEach(function(e){
+          if (e.name == 'Boat') {
+            upd_msg = {point:this.msg.name,
+             coords: e.coords 
+            };
+            console.log('point_update '+upd_msg);
+            socket.emit('adm_point_update', upd_msg);
+          }
+        });
       };
 
       $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
