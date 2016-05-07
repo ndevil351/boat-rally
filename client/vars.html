@@ -40,8 +40,9 @@
         $scope.$apply();
       });
 
-      $scope.update_point = function update_point(point_name, $scope) {
-        alert(point_name);
+      $scope.update_point = function update_point() {
+        alert(this.msg.name);
+        alert(this.$parent.sockets);
       };
 
       $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
@@ -141,7 +142,7 @@
               <td ng-bind="msg.Team_id"></td>
               <td>
                 <div ng-bind="msg.coords"></div>
-                <form ng-submit="update_point('{{msg.name}}')">
+                <form ng-submit="update_point()">
                   <button type="submit" class="btn btn-primary">Update</button>
                 </form>
               </td>
