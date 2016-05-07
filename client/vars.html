@@ -63,7 +63,7 @@
       
       $scope.update_point = function update_point(point_name) {
         alert(point_name);
-      }
+      };
     }
   </script>
 </head>
@@ -125,7 +125,7 @@
               <th>ActivateCode</th>
               <th>ConfirmCode</th>
               <th>Team</th>
-              <th>Team_id</td>
+              <th>Team_id</th>
                 <th>coords</th>
             </tr>
           </thead>
@@ -138,8 +138,7 @@
               <td ng-bind="msg.ConfirmCode"></td>
               <td ng-bind="msg.Team"></td>
               <td ng-bind="msg.Team_id"></td>
-              <td ng-bind="msg.coords"></td>
-              <td>
+              <td ng-bind="msg.coords">
                 <button type="button" class="btn btn-primary" onclick="update_point('{{msg.name}}')">Update</button>
               </td>
             </tr>
