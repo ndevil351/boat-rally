@@ -6,6 +6,10 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
   <script>
+    function update_point(point_name) {
+      alert(point_name);
+    }
+
     function VarsController($scope, $http) {
       socket = io.connect();
 
@@ -30,7 +34,7 @@
         });
         $scope.$apply();
       });
-      
+
       socket.on('adm_points', function(points) {
         console.log('adm_points');
         $scope.Points = points;
@@ -40,10 +44,6 @@
         $scope.$apply();
       });
 
-      $scope.update_point = function update_point(point_name) {
-        alert(point_name);
-      };
-      
       $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
         $scope.distance_treshold = response.data.distance_treshold;
         $scope.level_up_code = response.data.level_up_code;
@@ -64,7 +64,7 @@
           ];
         });
       });
-      
+
     }
   </script>
 </head>
@@ -127,7 +127,7 @@
               <th>ConfirmCode</th>
               <th>Team</th>
               <th>Team_id</th>
-                <th>coords</th>
+              <th>coords</th>
             </tr>
           </thead>
           <tbody>
@@ -141,7 +141,7 @@
               <td ng-bind="msg.Team_id"></td>
               <td>
                 <div ng-bind="msg.coords"></div>
-                <button type="button" class="btn btn-primary" ng-click="update_point('{{msg.name}}')">Update</button>
+                <button type="button" class="btn btn-primary" onclick="update_point('{{msg.name}}')">Update</button>
               </td>
             </tr>
           </tbody>
