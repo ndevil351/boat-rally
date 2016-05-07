@@ -247,6 +247,8 @@ io.on('connection', function(socket) {
         broadcastPoints(Points, sockets);
         broadcast_adm('adm_points', Points);
 
+        fs.writeFileSync(__dirname + '/data/trees.json', JSON.stringify(Points), 'utf8');
+
       }
     })
   })
