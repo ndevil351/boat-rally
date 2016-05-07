@@ -239,6 +239,18 @@ io.on('connection', function(socket) {
     updateRoster();
   });
 
+  socket.on('adm_point_update', function(upd_msg) {
+    Points.forEach(function(point) {
+      if (point.name == upd_msg.point) {
+        point.coords = [].concat(upd_msg.coords);
+
+        broadcastPoints(Points, sockets);
+        broadcast_adm('adm_points', Points);
+
+      }
+    })
+  })
+
   socket.on('code', function(msg) {
     timestamp = new Date();
     console.log('socket: ' + socket.id + ' name: ' + ((socket.last_data) ? socket.last_data.name : socket.last_data) + ' code:' + msg);
@@ -321,8 +333,8 @@ function sendPoints(_points, _socket) {
   b = [];
   _points.forEach(function(elem) {
     c = cloneDeep(elem);
-//    if (_name_id && _name_id == c.Team_id && !c.isActive) {
-      b.push(c);
+    //    if (_name_id && _name_id == c.Team_id && !c.isActive) {
+    b.push(c);
     // }
     // else {
     //   c.ActivateCode = '';

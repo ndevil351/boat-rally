@@ -47,7 +47,7 @@
             upd_msg = {point:this.msg.name,
              coords: e.coords 
             };
-            console.log('point_update '+upd_msg);
+            console.log('point_update '+upd_msg.point+' '+upd_msg.coords);
             socket.emit('adm_point_update', upd_msg);
           }
         },this);
