@@ -141,7 +141,7 @@
               <td ng-bind="msg.Team_id"></td>
               <td>
                 <div ng-bind="msg.coords"></div>
-                <button type="button" class="btn btn-primary" onclick="update_point('{{msg.name}}')">Update</button>
+                <button type="button" class="btn btn-primary" ng-click="update_point('{{msg.name}}')">Update</button>
               </td>
             </tr>
           </tbody>
