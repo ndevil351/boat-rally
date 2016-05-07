@@ -39,6 +39,10 @@
         });
         $scope.$apply();
       });
+
+      $scope.update_point = function update_point(point_name) {
+        alert(point_name);
+      };
       
       $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
         $scope.distance_treshold = response.data.distance_treshold;
@@ -61,9 +65,6 @@
         });
       });
       
-      $scope.update_point = function update_point(point_name) {
-        alert(point_name);
-      };
     }
   </script>
 </head>
