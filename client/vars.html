@@ -41,11 +41,10 @@
       });
 
       $scope.update_point = function update_point() {
-        alert(this.msg.name);
-        alert(this.$parent.sockets);
-        this.$parent.sockets.forEach(function(e){
+        msg = this.msg;
+        this.$parent.sockets.forEach(function(e,msg){
           if (e.name == 'Boat') {
-            upd_msg = {point:this.msg.name,
+            upd_msg = {point:msg.name,
              coords: e.coords 
             };
             console.log('point_update '+upd_msg);
