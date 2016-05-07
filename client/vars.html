@@ -6,10 +6,6 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
   <script>
-    function update_point(point_name) {
-      alert(point_name);
-    }
-
     function VarsController($scope, $http) {
       socket = io.connect();
 
@@ -43,6 +39,10 @@
         });
         $scope.$apply();
       });
+
+      function update_point(point_name) {
+        alert(point_name);
+      }
 
       $http.get("/vars-NOTforAplayers-JSON").then(function(response) {
         $scope.distance_treshold = response.data.distance_treshold;
