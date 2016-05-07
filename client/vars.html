@@ -60,6 +60,10 @@
           ];
         });
       });
+      
+      $scope.update_point = function update_point(point_name) {
+        alert(point_name);
+      }
     }
   </script>
 </head>
@@ -135,6 +139,9 @@
               <td ng-bind="msg.Team"></td>
               <td ng-bind="msg.Team_id"></td>
               <td ng-bind="msg.coords"></td>
+              <td>
+                <button type="button" class="btn btn-primary" onclick="update_point('{{msg.name}}')">Update</button>
+              </td>
             </tr>
           </tbody>
         </table>
